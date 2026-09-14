@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Mosaik Matematika Kelas 2</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1, h2 { color: #ff6347; }
+        input, select {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #32cd32;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: inherit;
+        }
+        button:hover { background-color: #228b22; }
+        
+        /* Grid Mosaik */
+        .mosaic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .mosaic-box {
+            background-color: #e0e0e0;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        /* Palet Warna */
+        .palette {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .color-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+        }
+        .color-btn.active { border: 3px solid #000; transform: scale(1.1); }
+        
+        /* Sertifikat */
+        .certificate-box {
+            border: 10px solid #ffd700;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: #fffacd;
+        }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- HALAMAN 1: IDENTITAS -->
+    <div id="page1" class="container">
+        <h1>Bermain Mosaik Matematika!</h1>
+        <p>Ayo isi nama dan kelasmu dulu ya!</p>
+        <input type="text" id="nama" placeholder="Nama Kamu..." required>
+        <select id="kelas">
+            <option value="2A">Kelas 2A</option>
+            <option value="2B">Kelas 2B</option>
+            <option value="2C">Kelas 2C</option>
+        </select><br>
+        <button onclick="mulaiGame()">Mulai Bermain</button>
+    </div>
+
+    <!-- HALAMAN 2: LEMBAR KERJA (GAME) -->
+    <div id="page2" class="container hidden">
+        <h2 id="sapaan">Halo!</h2>
+        <p>Pilih warna yang sesuai dengan jawaban di bawah ini, lalu klik kotak soalnya!</p>
+        
+        <div class="mosaic-grid" id="grid">
+            <div class="mosaic-box" data-answer="30">10 + 20</div>
+            <div class="mosaic-box" data-answer="50">70 - 20</div>
+            <div class="mosaic-box" data-answer="30">40 - 10</div>
+            <div class="mosaic-box" data-answer="80">50 + 30</div>
+            <div class="mosaic-box" data-answer="30">60 - 30</div>
+            <div class="mosaic-box" data-answer="80">90 - 10</div>
+            <div class="mosaic-box" data-answer="50">20 + 30</div>
+            <div class="mosaic-box" data-answer="80">40 + 40</div>
+            <div class="mosaic-box" data-answer="50">80 - 30</div>
+        </div>
+
+        <div class="palette">
+            <div class="color-btn" style="background: #ff4500;" onclick="pilihWarna('30', this)">30</div>
+            <div class="color-btn" style="background: #1e90ff;" onclick="pilihWarna('50', this)">50</div>
+            <div class="color-btn" style="background: #32cd32;" onclick="pilihWarna('80', this)">80</div>
+        </div>
+
+        <button id="btnSertifikat" class="hidden" onclick="ambilSertifikat()">Ambil Sertifikat!</button>
+    </div>
+
+    <!-- HALAMAN 3: SERTIFIKAT -->
+    <div id="page3" class="container hidden">
+        <div class="certificate-box">
+            <h1>🏆 SERTIFIKAT PENGHARGAAN 🏆</h1>
+            <p>Diberikan dengan bangga kepada:</p>
+            <h2 id="cert-nama">Nama</h2>
+            <p id="cert-kelas">Kelas</p>
+            <p>Telah berhasil menyelesaikan Tantangan Mosaik Matematika</p>
+            <h1 style="color: #32cd32;">Nilai: 100</h1>
+        </div>
+        <button onclick="location.reload()">Main Lagi</button>
+        <button style="background: #1e90ff;" onclick="window.print()">Cetak</button>
+    </div>
+
+    <script>
+        let warnaAktif = null;
+        let kotakSelesai = 0;
+
+        function mulaiGame() {
+            let nama = document.getElementById('nama').value;
+            let kelas = document.getElementById('kelas').value;
+            if(nama === '') { alert('Isi nama dulu ya!'); return; }
+            
+            document.getElementById('sapaan').innerText = "Halo " + nama + "!";
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+        }
+
+        function pilihWarna(jawaban, elemen) {
+            warnaAktif = jawaban;
+            // Hilangkan outline dari semua warna
+            let btns = document.getElementsByClassName('color-btn');
+            for(let btn of btns) { btn.classList.remove('active'); }
+            // Tambahkan outline ke warna yang dipilih
+            elemen.classList.add('active');
+        }
+
+        // Tambahkan event click ke semua kotak
+        let boxes = document.getElementsByClassName('mosaic-box');
+        for(let box of boxes) {
+            box.addEventListener('click', function() {
+                if(warnaAktif === null) {
+                    alert('Pilih warna angka dulu di bawah!');
+                    return;
+                }
+                
+                let jawabanBenar = this.getAttribute('data-answer');
+                
+                if(warnaAktif === jawabanBenar) {
+                    // Beri warna sesuai jawaban
+                    if(jawabanBenar === '30') this.style.backgroundColor = '#ff4500';
+                    if(jawabanBenar === '50') this.style.backgroundColor = '#1e90ff';
+                    if(jawabanBenar === '80') this.style.backgroundColor = '#32cd32';
+                    
+                    this.innerHTML = ''; // Hilangkan angka/soal
+                    this.style.pointerEvents = 'none'; // Kotak tidak bisa diklik lagi
+                    kotakSelesai++;
+
+                    // Jika semua sudah diwarnai (9 kotak)
+                    if(kotakSelesai === 9) {
+                        document.getElementById('btnSertifikat').classList.remove('hidden');
+                    }
+                } else {
+                    alert('Ups, salah hitung! Coba lagi ya.');
+                }
+            });
+        }
+
+        function ambilSertifikat() {
+            let nama = document.getElementById('nama').value;
+            let kelas = document.getElementById('kelas').value;
+            
+            document.getElementById('cert-nama').innerText = nama;
+            document.getElementById('cert-kelas').innerText = kelas;
+            
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page3').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
