@@ -3,250 +3,426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Mosaik Matematika Kelas 2</title>
-    <!-- Impor Font Lucu "Fredoka" dari Google Fonts -->
+    <title>Mosaik Matematika Interaktif - Kelas 2</title>
+    
+    <!-- Google Fonts & Canvas Confetti -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
         body {
-            font-family: 'Fredoka', 'Quicksand', sans-serif;
-            background-color: #f0f8ff;
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #fff9c4);
+            margin: 0;
+            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            text-align: center;
         }
+
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 90%;
-            border: 4px solid #ffd700;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 25px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            border: 4px solid #ffd54f;
+            text-align: center;
+            position: relative;
         }
-        h1 { color: #ff5722; font-weight: 700; }
-        h2 { color: #4caf50; font-weight: 600; }
-        
+
+        h1 { color: #ff5722; margin-top: 0; font-size: 26px; }
+        h2 { color: #0288d1; margin: 10px 0; }
+
         input, select {
-            padding: 12px;
-            margin: 10px 0;
-            width: 80%;
-            border-radius: 15px;
-            border: 2px solid #ffb74d;
+            width: 85%;
+            padding: 14px;
+            margin: 12px 0;
+            border-radius: 16px;
+            border: 3px solid #ffb74d;
             font-size: 18px;
             font-family: inherit;
             text-align: center;
             outline: none;
         }
-        input:focus {
-            border-color: #ff9800;
-        }
-        button {
-            background-color: #ff9800;
+
+        .btn-primary {
+            background: #ff9800;
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 14px 28px;
             font-size: 20px;
-            font-weight: 600;
-            border-radius: 15px;
+            font-weight: 700;
+            border-radius: 16px;
             cursor: pointer;
-            margin-top: 20px;
+            box-shadow: 0 6px 0 #e65100;
+            transition: all 0.1s ease;
             font-family: inherit;
-            box-shadow: 0 5px 0 #e65100;
-            transition: 0.1s;
         }
-        button:hover {
-            background-color: #fb8c00;
-        }
-        button:active {
+
+        .btn-primary:active {
             transform: translateY(4px);
-            box-shadow: 0 1px 0 #e65100;
+            box-shadow: 0 2px 0 #e65100;
         }
-        
-        /* Grid Mosaik */
-        .mosaic-grid {
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 20px;
+            height: 18px;
+            width: 100%;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #00e676, #76ff03);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Card Soal */
+        .question-card {
+            background: #fff8e1;
+            border: 3px dashed #ffa000;
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: #d84315;
+            margin: 5px 0;
+        }
+
+        /* Palette Warna (Tombol Jawaban) */
+        .palette-title {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .palette-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .mosaic-box {
-            background-color: #eceff1;
-            height: 90px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            font-weight: 700;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-            color: #37474f;
-            border: 2px dashed #b0bec5;
-        }
-        
-        /* Palet Warna */
-        .palette {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 25px;
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 20px;
-        }
+
         .color-btn {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
+            border: 3px solid #cfd8dc;
+            border-radius: 16px;
+            padding: 10px 5px;
+            background: #f5f5f5;
             cursor: pointer;
-            border: 4px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: transform 0.2s, border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .color-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.15);
+        }
+
+        .color-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #37474f;
+        }
+
+        /* Feedback Pop-up */
+        .feedback {
+            min-height: 32px;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+        .feedback.success { color: #2e7d32; }
+        .feedback.error { color: #c62828; }
+
+        /* Area Mosaik */
+        .mosaic-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+            background: #b0bec5;
+            padding: 6px;
+            border-radius: 16px;
+            margin-top: 10px;
+            aspect-ratio: 1 / 1;
+        }
+
+        .mosaic-tile {
+            background: #eceff1;
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            font-size: 20px;
-            font-weight: 700;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-            transition: 0.2s;
+            font-size: 12px;
+            color: #78909c;
+            font-weight: 600;
+            transition: background-color 0.6s ease, transform 0.4s ease;
+            pointer-events: none; /* DILARANG KLIK PETAK */
         }
-        .color-btn.active { 
-            border-color: #263238; 
-            transform: scale(1.15); 
+
+        .mosaic-tile.open {
+            color: transparent; /* Sembunyikan angka saat terbuka */
+            animation: popIn 0.5s ease;
         }
-        
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         /* Sertifikat */
-        .certificate-box {
-            border: 8px double #ff9800;
-            padding: 25px;
+        .certificate-card {
+            background: #fffde7;
+            border: 8px double #ffb74d;
             border-radius: 20px;
-            background-color: #fffde7;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        
-        .hidden { display: none; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- HALAMAN 1: IDENTITAS -->
+    <!-- HALAMAN 1: IDENTITAS SISWA -->
     <div id="page1" class="container">
-        <h1>🎮 Mosaik Matematika</h1>
-        <p style="font-size: 18px; color: #555;">Masukkan namamu untuk memulai!</p>
-        <input type="text" id="nama" placeholder="Ketik Nama Kamu..." required><br>
+        <h1>🌈 Mosaik Matematika</h1>
+        <p style="color: #666; font-size: 16px;">Hitung soalnya, pilih warnanya, dan buka gambar rahasianya!</p>
         
-        <!-- Pilihan Kelas Khusus Kelas 2 -->
-        <select id="kelas">
-            <option value="Kelas 2">Kelas 2</option>
-        </select><br>
+        <input type="text" id="nama" placeholder="Ketik Nama Kamu..." required>
+        <select id="kelas" disabled>
+            <option value="Kelas 2 SD">Kelas 2 SD</option>
+        </select>
         
-        <button onclick="mulaiGame()">Mulai Bermain 🚀</button>
+        <br><br>
+        <button class="btn-primary" onclick="mulaiPermainan()">Mulai Bermain 🚀</button>
     </div>
 
-    <!-- HALAMAN 2: LEMBAR KERJA (GAME) -->
+    <!-- HALAMAN 2: LEMBAR KERJA / GAME -->
     <div id="page2" class="container hidden">
         <h2 id="sapaan">Halo!</h2>
-        <p style="color: #666; font-size: 15px;">Pilih warna angka di bawah, lalu klik kotak soal yang tepat!</p>
         
-        <div class="mosaic-grid" id="grid">
-            <div class="mosaic-box" data-answer="30">10 + 20</div>
-            <div class="mosaic-box" data-answer="50">70 - 20</div>
-            <div class="mosaic-box" data-answer="30">40 - 10</div>
-            <div class="mosaic-box" data-answer="80">50 + 30</div>
-            <div class="mosaic-box" data-answer="30">60 - 30</div>
-            <div class="mosaic-box" data-answer="80">90 - 10</div>
-            <div class="mosaic-box" data-answer="50">20 + 30</div>
-            <div class="mosaic-box" data-answer="80">40 + 40</div>
-            <div class="mosaic-box" data-answer="50">80 - 30</div>
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
         </div>
 
-        <div class="palette">
-            <div class="color-btn" style="background: #ff5252;" onclick="pilihWarna('30', this)">30</div>
-            <div class="color-btn" style="background: #29b6f6;" onclick="pilihWarna('50', this)">50</div>
-            <div class="color-btn" style="background: #66bb6a;" onclick="pilihWarna('80', this)">80</div>
+        <div class="question-card" id="qCard">
+            <div style="font-size: 14px; color: #888;">SOAL MATEMATIKA:</div>
+            <div id="questionText" class="question-text">24 + 15 = ?</div>
         </div>
 
-        <button id="btnSertifikat" class="hidden" style="background-color: #9c27b0;" onclick="ambilSertifikat()">🏆 Ambil Sertifikat!</button>
+        <div class="palette-title">Cari jawabanmu pada legenda warna lalu klik warnanya:</div>
+        <div class="palette-grid" id="paletteGrid">
+            <!-- Diisi dinamis lewat JS -->
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <!-- Mosaik Grid (6x6) -->
+        <div class="mosaic-container" id="mosaicGrid">
+            <!-- 36 Petak akan diciptakan otomatis -->
+        </div>
     </div>
 
     <!-- HALAMAN 3: SERTIFIKAT -->
     <div id="page3" class="container hidden">
-        <div class="certificate-box">
-            <h1 style="color: #ff9800;">🎖️ SERTIFIKAT PENGHARGAAN 🎖️</h1>
-            <p style="font-size: 16px;">Sertifikat ini diberikan kepada:</p>
-            <h2 id="cert-nama" style="font-size: 28px; color: #1976d2; margin: 10px 0;">Nama</h2>
-            <p id="cert-kelas" style="font-weight: 600; font-size: 18px; color: #555;">Kelas 2</p>
-            <p style="font-size: 15px; margin-top: 15px;">Telah berhasil menyelesaikan tantangan penjumlahan dan pengurangan puluhan!</p>
-            <h1 style="color: #4caf50; font-size: 36px; margin: 10px 0;">NILAI: 100</h1>
+        <div class="certificate-card">
+            <h1 style="color: #ff9800; font-size: 24px; margin-bottom: 5px;">🎉 MASYAALLAH! 🎉</h1>
+            <h3 style="color: #2e7d32; margin-top: 0;">MOSAIK SELESAI Sempurna!</h3>
+            
+            <p>Sertifikat Penghargaan Diberikan Kepada:</p>
+            <h2 id="certNama" style="color: #1565c0; font-size: 28px; margin: 5px 0;">-</h2>
+            <p id="certKelas" style="font-weight: 700; color: #555;">Kelas 2 SD</p>
+
+            <div style="margin: 15px auto; width: 180px; aspect-ratio: 1/1;" id="finalMosaicView">
+                <!-- Salinan gambar Mosaik akhir -->
+            </div>
+
+            <h1 style="color: #4caf50; font-size: 32px; margin: 5px 0;">NILAI: 100</h1>
         </div>
-        <button onclick="location.reload()" style="background-color: #ff5722;">Main Lagi 🔄</button>
-        <button style="background-color: #00acc1;" onclick="window.print()">Cetak 🖨️</button>
+
+        <button class="btn-primary" onclick="location.reload()" style="background: #ff5722;">Main Lagi 🔄</button>
+        <button class="btn-primary" onclick="window.print()" style="background: #0288d1; margin-left: 10px;">Cetak 🖨️</button>
     </div>
 
     <script>
-        let warnaAktif = null;
-        let kotakSelesai = 0;
+        // Data Warna & Jawaban
+        const colorLegend = {
+            39: { name: "Biru Langit", hex: "#4fc3f7" },
+            43: { name: "Kuning", hex: "#ffeb3b" },
+            79: { name: "Merah", hex: "#ff2a2a" },
+            55: { name: "Oranye", hex: "#ff9100" },
+            62: { name: "Hijau", hex: "#00e676" },
+            90: { name: "Awan Putih", hex: "#ffffff" }
+        };
 
-        function mulaiGame() {
-            let nama = document.getElementById('nama').value;
-            if(nama.trim() === '') { 
-                alert('Isi nama kamu dulu ya!'); 
-                return; 
+        // Soal Penjumlahan & Pengurangan Puluhan (Kelas 2)
+        const questions = [
+            { text: "24 + 15 = ?", answer: 39 },
+            { text: "67 - 24 = ?", answer: 43 },
+            { text: "53 + 26 = ?", answer: 79 },
+            { text: "30 + 25 = ?", answer: 55 },
+            { text: "82 - 20 = ?", answer: 62 },
+            { text: "45 + 45 = ?", answer: 90 }
+        ];
+
+        // Layout Mosaik Pelangi (Grid 6x6 = 36 Petak)
+        const mosaicLayout = [
+            [43, 43, 39, 39, 39, 39],
+            [43, 39, 79, 79, 79, 39],
+            [39, 79, 55, 55, 55, 79],
+            [79, 55, 62, 62, 62, 55],
+            [90, 90, 62, 90, 90, 90],
+            [90, 90, 90, 90, 90, 90]
+        ];
+
+        let currentQIndex = 0;
+
+        function mulaiPermainan() {
+            const nama = document.getElementById('nama').value.trim();
+            if(!nama) {
+                alert("Isi nama kamu dulu ya!");
+                return;
             }
-            
+
             document.getElementById('sapaan').innerText = "Halo, " + nama + "! 👋";
             document.getElementById('page1').classList.add('hidden');
             document.getElementById('page2').classList.remove('hidden');
+
+            initMosaic();
+            initPalette();
+            loadQuestion();
         }
 
-        function pilihWarna(jawaban, elemen) {
-            warnaAktif = jawaban;
-            let btns = document.getElementsByClassName('color-btn');
-            for(let btn of btns) { btn.classList.remove('active'); }
-            elemen.classList.add('active');
+        // Inisialisasi Papan Mosaik
+        function initMosaic() {
+            const grid = document.getElementById('mosaicGrid');
+            grid.innerHTML = '';
+            
+            for(let r = 0; r < 6; r++) {
+                for(let c = 0; c < 6; c++) {
+                    const code = mosaicLayout[r][c];
+                    const tile = document.createElement('div');
+                    tile.className = 'mosaic-tile';
+                    tile.dataset.code = code;
+                    tile.innerText = code; // Menampilkan angka kode saat tertutup
+                    grid.appendChild(tile);
+                }
+            }
         }
 
-        let boxes = document.getElementsByClassName('mosaic-box');
-        for(let box of boxes) {
-            box.addEventListener('click', function() {
-                if(warnaAktif === null) {
-                    alert('Klik salah satu warna angka di bawah dulu ya!');
-                    return;
-                }
-                
-                let jawabanBenar = this.getAttribute('data-answer');
-                
-                if(warnaAktif === jawabanBenar) {
-                    if(jawabanBenar === '30') this.style.backgroundColor = '#ff5252';
-                    if(jawabanBenar === '50') this.style.backgroundColor = '#29b6f6';
-                    if(jawabanBenar === '80') this.style.backgroundColor = '#66bb6a';
-                    
-                    this.style.border = 'none';
-                    this.innerHTML = '';
-                    this.style.pointerEvents = 'none';
-                    kotakSelesai++;
+        // Inisialisasi Tombol Palette Warna
+        function initPalette() {
+            const palette = document.getElementById('paletteGrid');
+            palette.innerHTML = '';
 
-                    if(kotakSelesai === 9) {
-                        document.getElementById('btnSertifikat').classList.remove('hidden');
-                    }
-                } else {
-                    alert('Ups, hitungannya kurang tepat. Coba hitung lagi ya! 😊');
-                }
+            Object.keys(colorLegend).forEach(code => {
+                const item = colorLegend[code];
+                const btn = document.createElement('button');
+                btn.className = 'color-btn';
+                btn.onclick = () => eksekusiJawaban(parseInt(code));
+
+                btn.innerHTML = `
+                    <div class="color-swatch" style="background: ${item.hex};"></div>
+                    <div class="color-label">${code}</div>
+                `;
+                palette.appendChild(btn);
             });
         }
 
-        function ambilSertifikat() {
-            let nama = document.getElementById('nama').value;
-            let kelas = document.getElementById('kelas').value;
+        // Memuat Soal Aktif
+        function loadQuestion() {
+            const currentQ = questions[currentQIndex];
+            document.getElementById('questionText').innerText = currentQ.text;
+            document.getElementById('feedback').innerText = '';
             
-            document.getElementById('cert-nama').innerText = nama;
-            document.getElementById('cert-kelas').innerText = kelas;
+            // Update Progress Bar
+            const progressPct = (currentQIndex / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progressPct + '%';
+        }
+
+        // Mekanisme Utama Klik Warna
+        function eksekusiJawaban(selectedCode) {
+            const currentQ = questions[currentQIndex];
+            const feedbackEl = document.getElementById('feedback');
+
+            if(selectedCode === currentQ.answer) {
+                // JIKA BENAR
+                feedbackEl.className = "feedback success";
+                feedbackEl.innerText = "MasyaAllah! Benar! ⭐";
+
+                // Buka SEMUA petak mosaik yang memiliki kode tersebut
+                const targetTiles = document.querySelectorAll(`.mosaic-tile[data-code="${selectedCode}"]`);
+                targetTiles.forEach(tile => {
+                    tile.style.backgroundColor = colorLegend[selectedCode].hex;
+                    tile.classList.add('open');
+                });
+
+                currentQIndex++;
+
+                // Cek apakah semua soal selesai
+                if(currentQIndex >= questions.length) {
+                    document.getElementById('progressBar').style.width = '100%';
+                    setTimeout(tampilkanSertifikat, 1200);
+                } else {
+                    setTimeout(loadQuestion, 1000);
+                }
+
+            } else {
+                // JIKA SALAH
+                feedbackEl.className = "feedback error";
+                feedbackEl.innerText = "Belum tepat 😊 Coba hitung lagi, ya!";
+            }
+        }
+
+        // Tampilkan Sertifikat & Confetti
+        function tampilkanSertifikat() {
+            const nama = document.getElementById('nama').value;
+            document.getElementById('certNama').innerText = nama;
             
+            // Pindahkan tampilan mosaik lengkap ke sertifikat
+            const finalView = document.getElementById('finalMosaicView');
+            const mosaicClone = document.getElementById('mosaicGrid').cloneNode(true);
+            finalView.appendChild(mosaicClone);
+
             document.getElementById('page2').classList.add('hidden');
             document.getElementById('page3').classList.remove('hidden');
+
+            // Jalankan Efek Confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
         }
     </script>
 </body>
