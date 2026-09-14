@@ -4,94 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Mosaik Matematika Kelas 2</title>
+    <!-- Impor Font Lucu "Fredoka" dari Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Fredoka', 'Quicksand', sans-serif;
             background-color: #f0f8ff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             text-align: center;
         }
         .container {
             background: white;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             max-width: 500px;
             width: 90%;
+            border: 4px solid #ffd700;
         }
-        h1, h2 { color: #ff6347; }
+        h1 { color: #ff5722; font-weight: 700; }
+        h2 { color: #4caf50; font-weight: 600; }
+        
         input, select {
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
             width: 80%;
-            border-radius: 10px;
-            border: 2px solid #ccc;
-            font-size: 16px;
+            border-radius: 15px;
+            border: 2px solid #ffb74d;
+            font-size: 18px;
+            font-family: inherit;
+            text-align: center;
+            outline: none;
+        }
+        input:focus {
+            border-color: #ff9800;
         }
         button {
-            background-color: #32cd32;
+            background-color: #ff9800;
             color: white;
             border: none;
             padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 15px;
             cursor: pointer;
             margin-top: 20px;
             font-family: inherit;
+            box-shadow: 0 5px 0 #e65100;
+            transition: 0.1s;
         }
-        button:hover { background-color: #228b22; }
+        button:hover {
+            background-color: #fb8c00;
+        }
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #e65100;
+        }
         
         /* Grid Mosaik */
         .mosaic-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 12px;
             margin-top: 20px;
         }
         .mosaic-box {
-            background-color: #e0e0e0;
-            height: 100px;
+            background-color: #eceff1;
+            height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            border-radius: 15px;
             cursor: pointer;
             transition: 0.3s;
+            color: #37474f;
+            border: 2px dashed #b0bec5;
         }
         
         /* Palet Warna */
         .palette {
             display: flex;
             justify-content: space-around;
-            margin-top: 20px;
+            margin-top: 25px;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 20px;
         }
         .color-btn {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             cursor: pointer;
-            border: 3px solid transparent;
+            border: 4px solid transparent;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px black;
+            font-size: 20px;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            transition: 0.2s;
         }
-        .color-btn.active { border: 3px solid #000; transform: scale(1.1); }
+        .color-btn.active { 
+            border-color: #263238; 
+            transform: scale(1.15); 
+        }
         
         /* Sertifikat */
         .certificate-box {
-            border: 10px solid #ffd700;
-            padding: 30px;
-            border-radius: 15px;
-            background-color: #fffacd;
+            border: 8px double #ff9800;
+            padding: 25px;
+            border-radius: 20px;
+            background-color: #fffde7;
         }
         
         .hidden { display: none; }
@@ -101,22 +134,22 @@
 
     <!-- HALAMAN 1: IDENTITAS -->
     <div id="page1" class="container">
-        <h1>Bermain Mosaik Matematika!</h1>
-        <p>Ayo isi nama dan kelasmu dulu ya!</p>
-        <input type="text" id="nama" placeholder="Nama Kamu..." required>
+        <h1>🎮 Mosaik Matematika</h1>
+        <p style="font-size: 18px; color: #555;">Masukkan namamu untuk memulai!</p>
+        <input type="text" id="nama" placeholder="Ketik Nama Kamu..." required><br>
+        
+        <!-- Pilihan Kelas Khusus Kelas 2 -->
         <select id="kelas">
-            <option value="2A">Kelas 2A</option>
-            <option value="2B">Kelas 2B</option>
-            <option value="2C">Kelas 2C</option>
-            <option value="2D">Kelas 2D</option>
+            <option value="Kelas 2">Kelas 2</option>
         </select><br>
-        <button onclick="mulaiGame()">Mulai Bermain</button>
+        
+        <button onclick="mulaiGame()">Mulai Bermain 🚀</button>
     </div>
 
     <!-- HALAMAN 2: LEMBAR KERJA (GAME) -->
     <div id="page2" class="container hidden">
         <h2 id="sapaan">Halo!</h2>
-        <p>Pilih warna yang sesuai dengan jawaban di bawah ini, lalu klik kotak soalnya!</p>
+        <p style="color: #666; font-size: 15px;">Pilih warna angka di bawah, lalu klik kotak soal yang tepat!</p>
         
         <div class="mosaic-grid" id="grid">
             <div class="mosaic-box" data-answer="30">10 + 20</div>
@@ -131,26 +164,26 @@
         </div>
 
         <div class="palette">
-            <div class="color-btn" style="background: #ff4500;" onclick="pilihWarna('30', this)">30</div>
-            <div class="color-btn" style="background: #1e90ff;" onclick="pilihWarna('50', this)">50</div>
-            <div class="color-btn" style="background: #32cd32;" onclick="pilihWarna('80', this)">80</div>
+            <div class="color-btn" style="background: #ff5252;" onclick="pilihWarna('30', this)">30</div>
+            <div class="color-btn" style="background: #29b6f6;" onclick="pilihWarna('50', this)">50</div>
+            <div class="color-btn" style="background: #66bb6a;" onclick="pilihWarna('80', this)">80</div>
         </div>
 
-        <button id="btnSertifikat" class="hidden" onclick="ambilSertifikat()">Ambil Sertifikat!</button>
+        <button id="btnSertifikat" class="hidden" style="background-color: #9c27b0;" onclick="ambilSertifikat()">🏆 Ambil Sertifikat!</button>
     </div>
 
     <!-- HALAMAN 3: SERTIFIKAT -->
     <div id="page3" class="container hidden">
         <div class="certificate-box">
-            <h1>🏆 SERTIFIKAT PENGHARGAAN 🏆</h1>
-            <p>Diberikan dengan bangga kepada:</p>
-            <h2 id="cert-nama">Nama</h2>
-            <p id="cert-kelas">Kelas</p>
-            <p>Telah berhasil menyelesaikan Tantangan Mosaik Matematika</p>
-            <h1 style="color: #32cd32;">Nilai: 100</h1>
+            <h1 style="color: #ff9800;">🎖️ SERTIFIKAT PENGHARGAAN 🎖️</h1>
+            <p style="font-size: 16px;">Sertifikat ini diberikan kepada:</p>
+            <h2 id="cert-nama" style="font-size: 28px; color: #1976d2; margin: 10px 0;">Nama</h2>
+            <p id="cert-kelas" style="font-weight: 600; font-size: 18px; color: #555;">Kelas 2</p>
+            <p style="font-size: 15px; margin-top: 15px;">Telah berhasil menyelesaikan tantangan penjumlahan dan pengurangan puluhan!</p>
+            <h1 style="color: #4caf50; font-size: 36px; margin: 10px 0;">NILAI: 100</h1>
         </div>
-        <button onclick="location.reload()">Main Lagi</button>
-        <button style="background: #1e90ff;" onclick="window.print()">Cetak</button>
+        <button onclick="location.reload()" style="background-color: #ff5722;">Main Lagi 🔄</button>
+        <button style="background-color: #00acc1;" onclick="window.print()">Cetak 🖨️</button>
     </div>
 
     <script>
@@ -159,50 +192,48 @@
 
         function mulaiGame() {
             let nama = document.getElementById('nama').value;
-            let kelas = document.getElementById('kelas').value;
-            if(nama === '') { alert('Isi nama dulu ya!'); return; }
+            if(nama.trim() === '') { 
+                alert('Isi nama kamu dulu ya!'); 
+                return; 
+            }
             
-            document.getElementById('sapaan').innerText = "Halo " + nama + "!";
+            document.getElementById('sapaan').innerText = "Halo, " + nama + "! 👋";
             document.getElementById('page1').classList.add('hidden');
             document.getElementById('page2').classList.remove('hidden');
         }
 
         function pilihWarna(jawaban, elemen) {
             warnaAktif = jawaban;
-            // Hilangkan outline dari semua warna
             let btns = document.getElementsByClassName('color-btn');
             for(let btn of btns) { btn.classList.remove('active'); }
-            // Tambahkan outline ke warna yang dipilih
             elemen.classList.add('active');
         }
 
-        // Tambahkan event click ke semua kotak
         let boxes = document.getElementsByClassName('mosaic-box');
         for(let box of boxes) {
             box.addEventListener('click', function() {
                 if(warnaAktif === null) {
-                    alert('Pilih warna angka dulu di bawah!');
+                    alert('Klik salah satu warna angka di bawah dulu ya!');
                     return;
                 }
                 
                 let jawabanBenar = this.getAttribute('data-answer');
                 
                 if(warnaAktif === jawabanBenar) {
-                    // Beri warna sesuai jawaban
-                    if(jawabanBenar === '30') this.style.backgroundColor = '#ff4500';
-                    if(jawabanBenar === '50') this.style.backgroundColor = '#1e90ff';
-                    if(jawabanBenar === '80') this.style.backgroundColor = '#32cd32';
+                    if(jawabanBenar === '30') this.style.backgroundColor = '#ff5252';
+                    if(jawabanBenar === '50') this.style.backgroundColor = '#29b6f6';
+                    if(jawabanBenar === '80') this.style.backgroundColor = '#66bb6a';
                     
-                    this.innerHTML = ''; // Hilangkan angka/soal
-                    this.style.pointerEvents = 'none'; // Kotak tidak bisa diklik lagi
+                    this.style.border = 'none';
+                    this.innerHTML = '';
+                    this.style.pointerEvents = 'none';
                     kotakSelesai++;
 
-                    // Jika semua sudah diwarnai (9 kotak)
                     if(kotakSelesai === 9) {
                         document.getElementById('btnSertifikat').classList.remove('hidden');
                     }
                 } else {
-                    alert('Ups, salah hitung! Coba lagi ya.');
+                    alert('Ups, hitungannya kurang tepat. Coba hitung lagi ya! 😊');
                 }
             });
         }
